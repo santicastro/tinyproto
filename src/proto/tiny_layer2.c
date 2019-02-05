@@ -965,7 +965,8 @@ int tiny_read(STinyData *handle, uint16_t *uid, uint8_t *pbuf, int len, uint8_t 
                                         pbuf,
                                         result);
                     }
-                    result += sizeof(uint16_t);
+                    // TODO: check if this sum is correct
+                    // result += sizeof(uint16_t);
                 }
                 else if (handle->read_cb)
                 {
