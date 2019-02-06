@@ -100,6 +100,14 @@ public:
                                           m_buf[m_len++] = 0; }
 
     /**
+     * Puts next array of bytes to the packet.
+     * @param array - array to put.
+     * @param length - length of array.
+     */
+    inline void put    (const uint8_t *array, int length) { memcpy((void *)&m_buf[m_len], (void *)array, m_size - m_len);
+                                          m_len += length; }
+
+    /**
      * Adds data from packet to the new packet being built.
      * @param pkt - reference to the Packet to add.
      */
