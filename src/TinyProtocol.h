@@ -58,7 +58,7 @@ public:
      * @return None
      */
     void begin          (write_block_cb_t writecb,
-                         read_block_cb_t readcb);
+                         read_block_cb_t readcb, void *pdata = NULL);
 
 #ifdef ARDUINO
     /**
@@ -207,7 +207,7 @@ public:
 
     /**
      * Disables Uid field in the protocol. If enabled this 16-bit field
-     * with packet identifier is added before each payload data. 
+     * with packet identifier is added before each payload data.
      * Frame with uid: 0x7E 16-bituid payload 0x7E
      * Frame without uid: 0x7E payload 0x7E
      */
