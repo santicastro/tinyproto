@@ -131,8 +131,10 @@ all: library docs unittest sperf
 install: install-lib
 	$(STRIP) $(DESTDIR)/$@
 
-clean:
+clean-lib:
 	rm -rf $(BLD)
+
+clean: clean-lib
 	rm -rf docs
 	rm -rf releases
 
