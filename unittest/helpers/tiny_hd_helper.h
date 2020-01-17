@@ -20,42 +20,36 @@
 #ifndef _TINY_HD_HELPER_H_
 #define _TINY_HD_HELPER_H_
 
+#include "tiny_base_helper.h"
 #include <functional>
 #include <stdint.h>
 #include <thread>
 #include <atomic>
-#include "tiny_layer2.h"
-#include "tiny_hd.h"
+#include "proto/half_duplex/tiny_hd.h"
 #include "fake_channel.h"
 
 
-class TinyHelperHd
+class TinyHelperHd: public IBaseHelper<TinyHelperHd>
 {
-private:
-    STinyHdData   m_handle;
 public:
     TinyHelperHd(FakeChannel * channel,
                  int rxBufferSize,
                  const std::function<void(uint16_t,uint8_t*,int)> &onRxFrameCb = nullptr,
                  bool  multithread_mode = false);
-    ~TinyHelperHd();
+    virtual ~TinyHelperHd();
     int send_wait_ack(uint8_t *buf, int len);
-    int run();
-    int run(bool forked);
+    int run_rx() override;
+    int run_tx() override;
+    int rx_count() const { return m_rx_count; }
+    void wait_until_rx_count(int count, uint32_t timeout);
+    using IBaseHelper<TinyHelperHd>::run;
 private:
-    static uint32_t s_handleOffset;
-    FakeChannel * m_channel;
+    STinyHdData   m_handle;
+    std::atomic<int> m_rx_count{ 0 };
     std::function<void(uint16_t,uint8_t*,int)>
                   m_onRxFrameCb;
-    std::thread * m_thread;
-    std::atomic<bool>
-                  m_forceStop;
-    uint8_t     * m_buffer;
 
     static void   onRxFrame(void *handle, uint16_t uid, uint8_t * buf, int len);
-    static int    read_data(void * appdata, uint8_t * data, int length);
-    static int    write_data(void * appdata, const uint8_t * data, int length);
-    static void   receiveThread(TinyHelperHd *p);
 };
 
 #endif /* _FAKE_WIRE_H_ */

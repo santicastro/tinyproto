@@ -22,7 +22,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Tiny protocol
-   &#160;<span id="projectnumber">0.6.4</span>
+   &#160;<span id="projectnumber">0.9.3</span>
    </div>
    <div id="projectbrief">Tiny communication protocol for microcontrollers</div>
   </td>
@@ -70,13 +70,9 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga16cd043c890ed1fa381b3a20f75a626c"><td class="memItemLeft" align="right" valign="top"><a id="ga16cd043c890ed1fa381b3a20f75a626c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga16cd043c890ed1fa381b3a20f75a626c">TINY_SUCCESS</a>&#160;&#160;&#160;(1)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga16cd043c890ed1fa381b3a20f75a626c">TINY_SUCCESS</a>&#160;&#160;&#160;(0)</td></tr>
 <tr class="memdesc:ga16cd043c890ed1fa381b3a20f75a626c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tiny operation successful. Only tiny_send_start and tiny_read_start functions return this code. <br /></td></tr>
 <tr class="separator:ga16cd043c890ed1fa381b3a20f75a626c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga69c869a686b67bf0b7b8115599515d61"><td class="memItemLeft" align="right" valign="top"><a id="ga69c869a686b67bf0b7b8115599515d61"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga69c869a686b67bf0b7b8115599515d61">TINY_NO_ERROR</a>&#160;&#160;&#160;(0)</td></tr>
-<tr class="memdesc:ga69c869a686b67bf0b7b8115599515d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">No error. For tiny_send and tiny_read functions, this means, no data sent or received. <br /></td></tr>
-<tr class="separator:ga69c869a686b67bf0b7b8115599515d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84e6ca143550038e1a71cf36078d1926"><td class="memItemLeft" align="right" valign="top"><a id="ga84e6ca143550038e1a71cf36078d1926"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga84e6ca143550038e1a71cf36078d1926">TINY_ERR_FAILED</a>&#160;&#160;&#160;(-1)</td></tr>
 <tr class="memdesc:ga84e6ca143550038e1a71cf36078d1926"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout. <br /></td></tr>
@@ -87,7 +83,7 @@ Macros</h2></td></tr>
 <tr class="separator:gac9ba8076a1eb8613e8d1f07629ff0cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7bbe7440d11ad304b0af68e011f4eab7"><td class="memItemLeft" align="right" valign="top"><a id="ga7bbe7440d11ad304b0af68e011f4eab7"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga7bbe7440d11ad304b0af68e011f4eab7">TINY_ERR_DATA_TOO_LARGE</a>&#160;&#160;&#160;(-3)</td></tr>
-<tr class="memdesc:ga7bbe7440d11ad304b0af68e011f4eab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data too large to fit the user buffer, valid for tiny_read function. <br /></td></tr>
+<tr class="memdesc:ga7bbe7440d11ad304b0af68e011f4eab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data too large to fit the user buffer. <br /></td></tr>
 <tr class="separator:ga7bbe7440d11ad304b0af68e011f4eab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga541a9e67a84e39595ad647d641c4df2e"><td class="memItemLeft" align="right" valign="top"><a id="ga541a9e67a84e39595ad647d641c4df2e"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga541a9e67a84e39595ad647d641c4df2e">TINY_ERR_INVALID_DATA</a>&#160;&#160;&#160;(-4)</td></tr>
@@ -105,6 +101,10 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#gab15347e8e9f90d709d94d9c151d505b7">TINY_ERR_AGAIN</a>&#160;&#160;&#160;(-7)</td></tr>
 <tr class="memdesc:gab15347e8e9f90d709d94d9c151d505b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">No data for now, need to retry reading once again. <br /></td></tr>
 <tr class="separator:gab15347e8e9f90d709d94d9c151d505b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga618f7dd6cead76223e60300212712871"><td class="memItemLeft" align="right" valign="top"><a id="ga618f7dd6cead76223e60300212712871"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ERROR__FLAGS.html#ga618f7dd6cead76223e60300212712871">TINY_ERR_WRONG_CRC</a>&#160;&#160;&#160;(-8)</td></tr>
+<tr class="memdesc:ga618f7dd6cead76223e60300212712871"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invalid crc field of incoming frame. <br /></td></tr>
+<tr class="separator:ga618f7dd6cead76223e60300212712871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 </div><!-- contents -->

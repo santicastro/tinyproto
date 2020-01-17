@@ -31,10 +31,16 @@ public:
     ~FakeChannel();
     int read(uint8_t * data, int length);
     int write(const uint8_t * data, int length);
+
+    void setTimeout( int timeout_ms ) { m_timeout = timeout_ms; }
+    void disable() { m_rx->disable(); }
+    void enable()  { m_rx->enable(); }
+    void flush() { m_rx->flush(); }
 private:
     FakeWire * m_tx;
     FakeWire * m_rx;
     std::mutex m_mutex;
+    int m_timeout = 1000;
 };
 
 

@@ -37,14 +37,14 @@ extern "C" {
 /**
  * SerialHandle cross-platform type
  */
-typedef void * SerialHandle;
+typedef uintptr_t SerialHandle;
 
 #ifdef _WIN32
 
 #include <windows.h>
 
 /** Invalid serial handle definition */
-#define INVALID_SERIAL  INVALID_HANDLE_VALUE
+#define INVALID_SERIAL  (uintptr_t)INVALID_HANDLE_VALUE
 /** 115200 baud */
 #define SERIAL_115200   CBR_115200
 /** 38400 baud */
@@ -59,7 +59,7 @@ typedef void * SerialHandle;
 #include <string.h>
 
 /** Invalid serial handle definition */
-#define INVALID_SERIAL  (SerialHandle)-1
+#define INVALID_SERIAL  ((SerialHandle)-1)
 /** 115200 baud */
 #define SERIAL_115200   B115200
 /** 38400 baud */
@@ -107,7 +107,7 @@ extern void CloseSerial(SerialHandle port);
  * @return negative value in case of error.
  *         or number of bytes sent
  */
-extern int SerialSend(SerialHandle hPort, const uint8_t *buf, int len);
+extern int SerialSend(SerialHandle hPort, const void *buf, int len);
 
 /**
  * @brief Receive data from serial connection
@@ -119,7 +119,7 @@ extern int SerialSend(SerialHandle hPort, const uint8_t *buf, int len);
  * @return negative value in case of error.
  *         or number of bytes received
  */
-extern int SerialReceive(SerialHandle hPort, uint8_t *buf, int len);
+extern int SerialReceive(SerialHandle hPort, void *buf, int len);
 
 #ifdef __cplusplus
 }

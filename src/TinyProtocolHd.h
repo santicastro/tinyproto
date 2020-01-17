@@ -29,7 +29,7 @@
 #define _TINY_PROTOCOL_H_
 
 #include "TinyPacket.h"
-#include "proto/tiny_hd.h"
+#include "proto/half_duplex/tiny_hd.h"
 
 #ifdef ARDUINO
 #   include <HardwareSerial.h>
@@ -38,6 +38,11 @@
 #endif
 
 namespace Tiny {
+
+/**
+ * @ingroup HALF_DUPLEX_API
+ * @{
+ */
 
 /**
  *  ProtoHd class incapsulates Half Duplex Protocol functionality.
@@ -62,7 +67,7 @@ public:
     inline ProtoHd(void * buffer,
                    int    bufferSize,
                    void (*onReceive)(uint8_t *buf, int len))
-           :m_data{0}
+           :m_data{}
     {
         m_buffer      = buffer;
         m_bufferSize  = bufferSize;
@@ -88,8 +93,8 @@ public:
      */
     inline void beginToSerial()
     {
-         begin([](void *p, const uint8_t *b, int s)->int { return Serial.write(b, s); },
-               [](void *p, uint8_t *b, int s)->int { return Serial.readBytes(b, s); });
+         begin([](void *p, const void *b, int s)->int { return Serial.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial.readBytes((uint8_t *)b, s); });
     }
 
 #ifdef HAVE_HWSERIAL1
@@ -100,8 +105,8 @@ public:
      */
     inline void beginToSerial1()
     {
-         begin([](void *p, const uint8_t *b, int s)->int { return Serial1.write(b, s); },
-               [](void *p, uint8_t *b, int s)->int { return Serial1.readBytes(b, s); });
+         begin([](void *p, const void *b, int s)->int { return Serial1.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial1.readBytes((uint8_t *)b, s); });
     }
 #endif
 
@@ -113,8 +118,8 @@ public:
      */
     inline void beginToSerial2()
     {
-         begin([](void *p, const uint8_t *b, int s)->int { return Serial2.write(b, s); },
-               [](void *p, uint8_t *b, int s)->int { return Serial2.readBytes(b, s); });
+         begin([](void *p, const void *b, int s)->int { return Serial2.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial2.readBytes((uint8_t *)b, s); });
     }
 #endif
 
@@ -126,8 +131,22 @@ public:
      */
     inline void beginToSerial3()
     {
-         begin([](void *p, const uint8_t *b, int s)->int { return Serial3.write(b, s); },
-               [](void *p, uint8_t *b, int s)->int { return Serial3.readBytes(b, s); });
+         begin([](void *p, const void *b, int s)->int { return Serial3.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial3.readBytes((uint8_t *)b, s); });
+    }
+#endif
+
+
+#ifdef HAVE_SERIALUSB
+    /**
+     * Initializes protocol internal variables and redirects
+     * communication through Arduino Serial1 connection (SerialUSB).
+     * @return None
+     */
+    inline void beginToSerialUSB()
+    {
+         begin([](void *p, const void *b, int s)->int { return SerialUSB.write((const char *)b, s); },
+               [](void *p, void *b, int s)->int { return SerialUSB.readBytes((char *)b, s); });
     }
 #endif
 
@@ -156,7 +175,7 @@ public:
      *         zero if nothing is sent
      *         positive - Packet is successfully sent
      */
-    int  write          (Packet &pkt);
+    int  write          (IPacket &pkt);
 
     /**
      * Checks communcation channel for incoming messages.
@@ -206,6 +225,7 @@ public:
 private:
     /** buffer to receive data to */
     void               *m_buffer;
+    hdlc_crc_t          m_crc = HDLC_CRC_DEFAULT;
     /** max buffer size */
     int                 m_bufferSize;
     /** Callback, when new frame is received */
@@ -215,6 +235,9 @@ private:
 
 };
 
+/**
+ * @}
+ */
 
 } // Tiny namespace
 

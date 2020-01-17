@@ -1,0 +1,56 @@
+# Configuration
+
+os:
+  - linux
+#  - windows
+language: cpp
+# compiler:
+#  - gcc
+#  - clang
+
+addons:
+  apt:
+    packages:
+      - gcc-avr
+      - avr-libc
+      - doxygen
+      - cppcheck
+      - cpputest
+      - graphviz
+      - socat
+before_install:
+  - pip install --user cpp-coveralls
+install: skip
+jobs:
+  allow_failures:
+    - os: windows
+  include:
+    - stage: Check esp code
+      script:
+        - ./.travis/setup_esp_build_env.sh travis
+        - . ~/esp/esp-idf/export.sh
+        - cd extra/esp32_idf_prototest/components/tinyproto && ln -s ../../../../src && ln -s ../../../../component.mk
+        - cd ../.. && make defconfig
+        - make
+      cache:
+        directories:
+          - /home/travis/esp
+          - /home/travis/.espressif
+    - stage: Check clang linux code
+      compiler: clang
+      script:
+        - make
+    - stage: Check gcc linux code
+      compiler: gcc
+      script:
+        - make
+        - make docs 1> /dev/null
+        - ./.travis/run_tests.sh
+        - make clean
+        - make EXTRA_CPPFLAGS="--coverage" check
+      after_success:
+        - coveralls -b . --exclude docs --exclude extra --exclude unittest --exclude bld --exclude tools --exclude examples --gcov-options '\-lp'
+    - stage: Check avr code
+      script:
+        - make ARCH=avr
+

@@ -1,5 +1,5 @@
 /*
-    Copyright 2017 (C) Alexey Dynda
+    Copyright 2017-2019 (C) Alexey Dynda
 
     This file is part of Tiny Protocol Library.
 
@@ -40,14 +40,15 @@ void ProtoHd::onReceiveInternal(void *handle, uint16_t uid, uint8_t *pdata, int 
 void ProtoHd::begin(write_block_cb_t writecb,
                     read_block_cb_t readcb)
 {
-    STinyHdInit   init = {0};
+    STinyHdInit   init{};
     init.write_func       = writecb;
     init.read_func        = readcb;
     init.pdata            = this;
     init.on_frame_cb      = onReceiveInternal;
     init.inbuf            = m_buffer;
     init.inbuf_size       = m_bufferSize;
-    init.timeout          = 1000;
+    init.timeout          = 100;
+    init.crc_type         = m_crc;
     init.multithread_mode = 0;
 
     tiny_hd_init( &m_data, &init  );
@@ -63,7 +64,7 @@ int ProtoHd::write(char* buf, int size)
     return tiny_send_wait_ack(&m_data, buf, size);
 }
 
-int ProtoHd::write(Packet &pkt)
+int ProtoHd::write(IPacket &pkt)
 {
     return tiny_send_wait_ack(&m_data, pkt.m_buf, pkt.m_len);
 }
@@ -75,22 +76,25 @@ int ProtoHd::run()
 
 void ProtoHd::disableCrc()
 {
-    tiny_set_fcs_bits(&m_data.handle, 0);
+    m_crc = HDLC_CRC_OFF;
 }
 
 bool ProtoHd::enableCheckSum()
 {
-    return tiny_set_fcs_bits(&m_data.handle, 8) == TINY_NO_ERROR;
+    m_crc = HDLC_CRC_8;
+    return true;
 }
 
 bool ProtoHd::enableCrc16()
 {
-    return tiny_set_fcs_bits(&m_data.handle, 16) == TINY_NO_ERROR;
+    m_crc = HDLC_CRC_16;
+    return true;
 }
 
 bool ProtoHd::enableCrc32()
 {
-    return tiny_set_fcs_bits(&m_data.handle, 32) == TINY_NO_ERROR;
+    m_crc = HDLC_CRC_32;
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////

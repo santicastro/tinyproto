@@ -1,5 +1,5 @@
 /*
-    Copyright 2016,2018 (C) Alexey Dynda
+    Copyright 2016-2019 (C) Alexey Dynda
 
     This file is part of Tiny Protocol Library.
 
@@ -35,13 +35,15 @@
 #   include <string.h>
 #endif
 
+#include <stdio.h>
+
 namespace Tiny {
 
 /**
  * Describes packet entity and provides API methods to
  * manipulate the packet.
  */
-class Packet
+class IPacket
 {
 public:
     /**
@@ -50,26 +52,31 @@ public:
      * @param size - size of the buffer to hold packet data
      * @note passed buffer must exist all lifecycle of the Packet object.
      */
-    Packet(char *buf, size_t size)     { m_len = 0; m_size = size; m_buf = (uint8_t*)buf; m_uid =0; m_p=0; }
+    IPacket(char *buf, size_t size)     { m_len = 0; m_size = size; m_buf = (uint8_t*)buf; m_p=0; }
+
+    /**
+     * Destroys the object
+     */
+    virtual ~IPacket() = default;
 
     /**
      * Clears Packet state. Buffer and its size are preserved.
      */
-    inline void clear  ()              { m_len = 0; m_p = 0; }
+    void clear  ()              { m_len = 0; m_p = 0; }
 
     /**
      * Puts next byte to the packet. For example, after calling this method
      * twice: put(5), put(10), - the Packet will contain 5,10.
      * @param byte - data byte to put.
      */
-    inline void put    (uint8_t byte)  { m_buf[m_len++] = byte; }
+    void put    (uint8_t byte)  { m_buf[m_len++] = byte; }
 
     /**
      * Puts next char to the packet. For example, after calling this method
      * twice: put('a'), put('c'), - the Packet will contain 'ac'.
      * @param chr - character to put.
      */
-    inline void put    (char chr)      { put((uint8_t)chr); }
+    void put    (char chr)      { put((uint8_t)chr); }
 
     /**
      * Puts next 16-bit unsigned integer to the packet.
@@ -111,16 +118,7 @@ public:
      * Adds data from packet to the new packet being built.
      * @param pkt - reference to the Packet to add.
      */
-    inline void put    (const Packet &pkt){ memcpy(&m_buf[m_len], pkt.m_buf, pkt.m_len); m_len += pkt.m_len; }
-
-    /**
-     * Puts uid to the packet.
-     * @warning uid is sent only if this functionality is enabled in the Proto.
-     * @see Proto::enableUid
-     * @see Proto::disableUid
-     * @param uid - 16-bit number to place to the packet.
-     */
-    inline void putUid (uint16_t uid)  { m_uid = uid; }
+    inline void put    (const IPacket &pkt){ memcpy(&m_buf[m_len], pkt.m_buf, pkt.m_len); m_len += pkt.m_len; }
 
     /**
      * Reads next byte from the packet.
@@ -132,7 +130,7 @@ public:
      * Reads next character from the packet.
      * @return character from the packet.
      */
-    inline char getChar      ()        { return (char)Packet::getByte(); }
+    inline char getChar      ()        { return (char)IPacket::getByte(); }
 
     /**
      * Reads next unsigned 16-bit integer from the packet.
@@ -156,16 +154,7 @@ public:
      * Reads zero-terminated string from the packet.
      * @return zero-terminated string.
      */
-    inline char* getString   ()        { char *p = (char *)&m_buf[m_p]; m_p += strlen((char*)m_buf) + 1; return p; }
-
-    /**
-     * Returns 16-bit identificator of the packet.
-     * @warning uid is valid only if uid functionality is enabled in the Proto
-     * @see Proto::enableUid
-     * @see Proto::disableUid
-     * @return 16-bit uid.
-     */
-    inline uint16_t getUid   () const  { return m_uid; }
+    inline char* getString   ()        { char *p = (char *)&m_buf[m_p]; m_p += strlen(p) + 1; return p; }
 
     /**
      * Returns size of payload data in the received packet.
@@ -190,22 +179,50 @@ public:
      */
     uint8_t &operator[]      (size_t idx) { return m_buf[idx]; }
 
-    /**
-     * Assign operator = puts next char to the packet. Several
-     * assign operators put one by one several chars.
-     */
-    Packet &operator=        (char chr){ put(chr); return *this; }
-
 private:
-    friend class        Proto;
     friend class        ProtoHd;
+    friend class        IProtoFd;
     friend class        ProtoLight;
 
     uint8_t*            m_buf;
-    uint16_t            m_uid;
-    uint8_t             m_size;
-    uint8_t             m_len;
-    uint8_t             m_p;
+    int                 m_size;
+    int                 m_len;
+    int                 m_p;
+};
+
+/**
+ * Template  class to create packet with static allocation of buffer
+ * Use this class for microcontrollers with few resources.
+ */
+template <size_t S>
+class Packet: public IPacket
+{
+public:
+    /**
+     * Creates IPacket instance with statically allocated buffer
+     */
+    Packet(): IPacket(m_data, S) {}
+
+private:
+    char m_data[S];
+};
+
+/**
+ * Class which allocated buffer for packet dynamically.
+ * Use this class only on powerful microcontrollers.
+ */
+class PacketD: public IPacket
+{
+public:
+    /**
+     * Creates packet with dynamically allocated buffer.
+     * @param size number of bytes to allocate for the packet buffer.
+     */
+    PacketD(int size): IPacket((char *)(new uint8_t[size]), size) {}
+
+    ~PacketD() { delete[] (uint8_t *)data(); }
+
+private:
 };
 
 
