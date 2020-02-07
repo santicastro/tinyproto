@@ -130,8 +130,11 @@ static int writeToSerial(void *p, const void *b, int s)
 
 static int readFromSerial(void *p, void *b, int s)
 {
-    int length = Serial.readBytes((uint8_t *)b, s);
-    return length;
+    if (Serial.available()) {
+        int length = Serial.readBytes((uint8_t *)b, s);
+        return length;
+    }
+    return 0;
 }
 
 

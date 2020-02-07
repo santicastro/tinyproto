@@ -81,7 +81,7 @@ public:
     inline void beginToSerial1()
     {
          begin([](void *p, const void *b, int s)->int { return Serial1.write((const uint8_t *)b, s); },
-               [](void *p, void *b, int s)->int { return Serial1.readBytes((uint8_t *)b, s); });
+               [](void *p, void *b, int s)->int { return Serial1.available() ? Serial1.readBytes((uint8_t *)b, s): 0; });
     }
 #endif
 
@@ -94,7 +94,7 @@ public:
     inline void beginToSerial2()
     {
          begin([](void *p, const void *b, int s)->int { return Serial2.write((const uint8_t *)b, s); },
-               [](void *p, void *b, int s)->int { return Serial2.readBytes((uint8_t *)b, s); });
+               [](void *p, void *b, int s)->int { return Serial2.available() ? Serial2.readBytes((uint8_t *)b, s): 0; });
     }
 #endif
 
@@ -107,7 +107,7 @@ public:
     inline void beginToSerialUSB()
     {
          begin([](void *p, const void *b, int s)->int { return SerialUSB.write((const char *)b, s); },
-               [](void *p, void *b, int s)->int { return SerialUSB.readBytes((char *)b, s); });
+               [](void *p, void *b, int s)->int { return SerialUSB.available() ? SerialUSB.readBytes((char *)b, s) : 0; });
     }
 #endif
 
