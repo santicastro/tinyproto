@@ -51,7 +51,12 @@ int ProtoLight::write(char* buf, int size)
 
 int ProtoLight::read(char *buf, int size)
 {
-    return tiny_light_read(&m_data, (uint8_t*)buf, size);
+    return tiny_light_read(&m_data, (uint8_t*)buf, size, 1000);
+}
+
+int ProtoLight::read(char *buf, int size, uint16_t timeout)
+{
+    return tiny_light_read(&m_data, (uint8_t*)buf, size, timeout);
 }
 
 int ProtoLight::write(IPacket &pkt)
@@ -61,7 +66,15 @@ int ProtoLight::write(IPacket &pkt)
 
 int ProtoLight::read(IPacket &pkt)
 {
-    int len = tiny_light_read(&m_data, pkt.m_buf, pkt.m_size);
+    int len = tiny_light_read(&m_data, pkt.m_buf, pkt.m_size, 1000);
+    pkt.m_p = 0;
+    pkt.m_len = len;
+    return len;
+}
+
+int ProtoLight::read(IPacket &pkt, uint16_t timeout)
+{
+    int len = tiny_light_read(&m_data, pkt.m_buf, pkt.m_size, timeout);
     pkt.m_p = 0;
     pkt.m_len = len;
     return len;

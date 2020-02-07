@@ -139,6 +139,17 @@ public:
     int  read           (char* buf, int size);
 
     /**
+     * Reads data block from communication channel.
+     * @param buf - buffer to place data read from communication channel
+     * @param size - maximum size of the buffer in bytes.
+     * @param timeout - integer argument, max time to wait in ms
+     * @return negative value in case of error
+     *         zero if nothing is read
+     *         positive - number of bytes read from the channel
+     */
+    int  read           (char* buf, int size, uint16_t timeout);
+
+    /**
      * Sends packet over communication channel.
      * @param pkt - Packet to send
      * @see Packet
@@ -157,6 +168,17 @@ public:
      *         positive - Packet is successfully received
      */
     int  read           (IPacket &pkt);
+
+    /**
+     * Reads packet from communication channel.
+     * @param pkt - Packet object to put data to
+     * @param timeout - integer argument, max time to wait in ms
+     * @see Packet
+     * @return negative value in case of error
+     *         zero if nothing is read
+     *         positive - Packet is successfully received
+     */
+    int  read           (IPacket &pkt, uint16_t timeout);
 
     /**
      * Disable CRC field in the protocol.

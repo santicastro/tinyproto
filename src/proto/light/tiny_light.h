@@ -122,6 +122,7 @@ extern int tiny_light_send(void *handle, const uint8_t *pbuf, int len);
  * @param handle - pointer to Tiny Light data.
  * @param pbuf a const pointer to unsigned char - buffer with data to send
  * @param len an integer argument - length of data to send
+ * @param timeout an integer argument - max time to wait in ms
  * @see TINY_ERR_INVALID_DATA
  * @see TINY_ERR_FAILED
  * @see TINY_ERR_DATA_TOO_LARGE
@@ -133,7 +134,7 @@ extern int tiny_light_send(void *handle, const uint8_t *pbuf, int len);
  *       to the function is too small to fit all.
  * @remarks This function is not thread safe.
  */
-extern int tiny_light_read(void *handle, uint8_t *pbuf, int len);
+extern int tiny_light_read(void *handle, uint8_t *pbuf, int len, uint16_t timeout);
 
 /**
  * @brief returns lower level hdlc handle.

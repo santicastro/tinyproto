@@ -150,12 +150,12 @@ static int on_frame_read(void *user_data, void *data, int len)
 }
 
 
-int tiny_light_read(void *handle, uint8_t *pbuf, int len)
+int tiny_light_read(void *handle, uint8_t *pbuf, int len, uint16_t timeout)
 {
     hdlc_set_rx_buffer( &((STinyLightData *)handle)->_hdlc, pbuf, len);
     int result = hdlc_run_rx_until_read( &((STinyLightData *)handle)->_hdlc,
                                           ((STinyLightData *)handle)->read_func,
-                                          ((STinyLightData *)handle)->user_data, 1000 );
+                                          ((STinyLightData *)handle)->user_data, timeout );
     return result;
 }
 
