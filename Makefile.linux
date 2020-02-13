@@ -1,0 +1,32 @@
+.PHONY: tiny_loopback clean_tiny_loopback
+
+CONFIG_ENABLE_FCS32 ?= y
+CONFIG_ENABLE_FCS16 ?= y
+CONFIG_ENABLE_CHECKSUM ?= y
+CONFIG_ENABLE_STATS ?=y
+# ************* Common defines ********************
+CPPFLAGS += -I./tools/serial
+CPPFLAGS += -fPIC -pthread -pg -fexceptions
+CFLAGS += -g
+LDFLAGS += -L. -lm -shared
+
+TOOLS_LDFLAGS += -L$(BLD) -lm -pthread -ltinyprotocol
+TOOLS_EXT ?=
+
+
+include Makefile.common
+include Makefile.cpputest
+
+OBJ_TINY_LOOPBACK = tools/loopback/tiny_loopback.o \
+	tools/serial/serial_linux.o \
+	tools/serial/serial_win32.o
+
+all: tiny_loopback
+
+tiny_loopback: $(OBJ_TINY_LOOPBACK) library
+	$(CXX) $(CPPFLAGS) -o $(BLD)/tiny_loopback$(TOOLS_EXT) $(OBJ_TINY_LOOPBACK) $(TOOLS_LDFLAGS)
+
+clean: clean_tiny_loopback
+
+clean_tiny_loopback:
+	rm -rf $(OBJ_TINY_LOOPBACK) $(OBJ_TINY_LOOPBACK:.o=.gcno) $(OBJ_TINY_LOOPBACK:.o=.gcda)

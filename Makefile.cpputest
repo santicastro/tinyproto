@@ -1,0 +1,29 @@
+.PHONY: unittest check clean_unittest
+
+OBJ_UNIT_TEST = \
+        unittest/helpers/fake_wire.o \
+        unittest/helpers/fake_connection.o \
+        unittest/helpers/fake_channel.o \
+        unittest/helpers/tiny_base_helper.o \
+        unittest/helpers/tiny_hdlc_helper.o \
+        unittest/helpers/tiny_light_helper.o \
+        unittest/helpers/tiny_hd_helper.o \
+        unittest/helpers/tiny_fd_helper.o \
+        unittest/main.o \
+        unittest/hal_tests.o \
+        unittest/packet_tests.o \
+        unittest/hdlc_tests.o \
+        unittest/light_tests.o \
+        unittest/hd_tests.o \
+        unittest/fd_tests.o \
+
+unittest: $(OBJ_UNIT_TEST) library
+	$(CXX) $(CPPFLAGS) -o $(BLD)/unit_test $(OBJ_UNIT_TEST) -L$(BLD) -lm -pthread -ltinyprotocol -lCppUTest -lCppUTestExt
+
+check: unittest
+	$(BLD)/unit_test
+
+clean: clean_unittest
+
+clean_unittest:
+	rm -rf $(OBJ_UNIT_TEST) $(OBJ_UNIT_TEST:.o=.gcno) $(OBJ_UNIT_TEST:.o=.gcda)

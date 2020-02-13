@@ -1,5 +1,5 @@
 /*
-    Copyright 2017 (C) Alexey Dynda
+    Copyright 2017-2019 (C) Alexey Dynda
 
     This file is part of Tiny Protocol Library.
 
@@ -28,7 +28,7 @@
 #define _TINY_LIGHT_PROTOCOL_H_
 
 #include "TinyPacket.h"
-#include "proto/tiny_light.h"
+#include "proto/light/tiny_light.h"
 
 #ifdef ARDUINO
 #   include <HardwareSerial.h>
@@ -39,6 +39,11 @@
 namespace Tiny {
 
 /**
+ * @ingroup LIGHT_API
+ * @{
+ */
+
+/**
  *  ProtoLight class incapsulates Protocol functionality.
  *  Remember that you may use always C-style API functions
  *  instead C++. Please refer to documentation.
@@ -46,7 +51,7 @@ namespace Tiny {
 class ProtoLight
 {
 public:
-    inline ProtoLight(): m_data{0} { }
+    inline ProtoLight(): m_data{} { }
 
     /**
      * Initializes protocol internal variables.
@@ -66,6 +71,46 @@ public:
      * @return None
      */
     void beginToSerial();
+
+#ifdef HAVE_HWSERIAL1
+    /**
+     * Initializes protocol internal variables and redirects
+     * communication through Arduino Serial1 connection (Serial1).
+     * @return None
+     */
+    inline void beginToSerial1()
+    {
+         begin([](void *p, const void *b, int s)->int { return Serial1.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial1.available() ? Serial1.readBytes((uint8_t *)b, s): 0; });
+    }
+#endif
+
+#ifdef HAVE_HWSERIAL2
+    /**
+     * Initializes protocol internal variables and redirects
+     * communication through Arduino Serial2 connection (Serial2).
+     * @return None
+     */
+    inline void beginToSerial2()
+    {
+         begin([](void *p, const void *b, int s)->int { return Serial2.write((const uint8_t *)b, s); },
+               [](void *p, void *b, int s)->int { return Serial2.available() ? Serial2.readBytes((uint8_t *)b, s): 0; });
+    }
+#endif
+
+#ifdef HAVE_SERIALUSB
+    /**
+     * Initializes protocol internal variables and redirects
+     * communication through Arduino Serial1 connection (SerialUSB).
+     * @return None
+     */
+    inline void beginToSerialUSB()
+    {
+         begin([](void *p, const void *b, int s)->int { return SerialUSB.write((const char *)b, s); },
+               [](void *p, void *b, int s)->int { return SerialUSB.available() ? SerialUSB.readBytes((char *)b, s) : 0; });
+    }
+#endif
+
 #endif
 
     /**
@@ -94,6 +139,17 @@ public:
     int  read           (char* buf, int size);
 
     /**
+     * Reads data block from communication channel.
+     * @param buf - buffer to place data read from communication channel
+     * @param size - maximum size of the buffer in bytes.
+     * @param timeout - integer argument, max time to wait in ms
+     * @return negative value in case of error
+     *         zero if nothing is read
+     *         positive - number of bytes read from the channel
+     */
+    int  read           (char* buf, int size, uint16_t timeout);
+
+    /**
      * Sends packet over communication channel.
      * @param pkt - Packet to send
      * @see Packet
@@ -101,7 +157,7 @@ public:
      *         zero if nothing is sent
      *         positive - Packet is successfully sent
      */
-    int  write          (Packet &pkt);
+    int  write          (IPacket &pkt);
 
     /**
      * Reads packet from communication channel.
@@ -111,14 +167,71 @@ public:
      *         zero if nothing is read
      *         positive - Packet is successfully received
      */
-    int  read           (Packet &pkt);
+    int  read           (IPacket &pkt);
+
+    /**
+     * Reads packet from communication channel.
+     * @param pkt - Packet object to put data to
+     * @param timeout - integer argument, max time to wait in ms
+     * @see Packet
+     * @return negative value in case of error
+     *         zero if nothing is read
+     *         positive - Packet is successfully received
+     */
+    int  read           (IPacket &pkt, uint16_t timeout);
+
+    /**
+     * Disable CRC field in the protocol.
+     * If CRC field is OFF, then the frame looks like this:
+     * 0x7E databytes 0x7E.
+     */
+    void disableCrc     ();
+
+    /**
+     * Enables CRC by specified bit-size.
+     * 8-bit is supported by Nano version of Tiny library.
+     * @param crc crc type
+     */
+    void enableCrc(hdlc_crc_t crc);
+
+    /**
+     * Enables CRC 8-bit field in the protocol. This field
+     * contains sum of all data bytes in the packet.
+     * 8-bit field is supported by Nano version of Tiny library.
+     * @return true if successful
+     *         false in case of error.
+     */
+    bool enableCheckSum ();
+
+    /**
+     * Enables CRC 16-bit field in the protocol. This field
+     * contains FCS 16-bit CCITT like defined in RFC 1662.
+     * 16-bit field is not supported by Nano version of Tiny library.
+     * @return true if successful
+     *         false in case of error.
+     */
+    bool enableCrc16    ();
+
+    /**
+     * Enables CRC 32-bit field in the protocol. This field
+     * contains FCS 32-bit CCITT like defined in RFC 1662.
+     * 32-bit field is not supported by Nano version of
+     * Tiny library.
+     * @return true if successful
+     *         false in case of error.
+     */
+    bool enableCrc32    ();
 
 private:
-    STinyLightData       m_data;
+    STinyLightData       m_data{};
+
+    hdlc_crc_t           m_crc = HDLC_CRC_DEFAULT;
 };
 
+/**
+ * @}
+ */
 
 } // Tiny namespace
-
 
 #endif

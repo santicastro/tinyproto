@@ -1,16 +1,14 @@
 var searchData=
 [
-  ['sentbytes',['sentbytes',['../structSTinyTxStatus.html#ab5074839815ccf15744e258ce4816c06',1,'STinyTxStatus']]],
-  ['size',['size',['../classTiny_1_1Packet.html#a47c24d500159d2268908b10c407d8d4d',1,'Tiny::Packet']]],
-  ['stat',['stat',['../structSTinyData.html#a16ba8c9e60d6aee3fcd4909f85561f3d',1,'STinyData::stat()'],['../structSTinyLightData.html#a623323a7a84807b5ce14a7cb56ec07f0',1,'STinyLightData::stat()']]],
-  ['state',['state',['../structtiny__request__.html#a019207b55569a48a82a2922dd3cc7eb2',1,'tiny_request_']]],
-  ['stinydata',['STinyData',['../structSTinyData.html',1,'']]],
-  ['stinyhddata',['STinyHdData',['../tiny__hd_8h.html#af9f81ad129b754a780dfca5dcd7f7cf9',1,'tiny_hd.h']]],
-  ['stinyhddata_5f',['STinyHdData_',['../structSTinyHdData__.html',1,'']]],
-  ['stinyhdinit',['STinyHdInit',['../tiny__hd_8h.html#a784f1a0f0ae7f06da4bc288fa3f22408',1,'tiny_hd.h']]],
-  ['stinyhdinit_5f',['STinyHdInit_',['../structSTinyHdInit__.html',1,'']]],
-  ['stinylightdata',['STinyLightData',['../structSTinyLightData.html',1,'']]],
-  ['stinyrxstatus',['STinyRxStatus',['../structSTinyRxStatus.html',1,'']]],
-  ['stinystats',['STinyStats',['../structSTinyStats.html',1,'']]],
-  ['stinytxstatus',['STinyTxStatus',['../structSTinyTxStatus.html',1,'']]]
+  ['return_20error_20codes_20for_20tiny_20api_20functions',['Return error codes for Tiny API functions',['../group__ERROR__FLAGS.html',1,'']]],
+  ['read',['read',['../classTiny_1_1ProtoLight.html#acf18a8b73ee6c6394270c903ad7882b8',1,'Tiny::ProtoLight::read(char *buf, int size)'],['../classTiny_1_1ProtoLight.html#aa040cbf16f9c074959fb410db6858b9b',1,'Tiny::ProtoLight::read(IPacket &amp;pkt)']]],
+  ['read_5fblock_5fcb_5ft',['read_block_cb_t',['../tiny__types_8h.html#a15bec127d9ee63658563d62e92b5261b',1,'tiny_types.h']]],
+  ['read_5ffunc',['read_func',['../structtiny__fd__init__t__.html#a5b241b958dbbc00dc8d5a6457ea61ed0',1,'tiny_fd_init_t_::read_func()'],['../structSTinyHdData__.html#a788bb96f41bfd7bdb6ce62e5fd018632',1,'STinyHdData_::read_func()'],['../structSTinyHdInit__.html#a5de352b11ca7915737bc459cde7c566d',1,'STinyHdInit_::read_func()'],['../structSTinyLightData.html#af9b045852adb08c137abce21d02f00ea',1,'STinyLightData::read_func()']]],
+  ['retries',['retries',['../structtiny__fd__init__t__.html#ae366ae6e7626b0d92a6e5088c29169cd',1,'tiny_fd_init_t_']]],
+  ['retry_5ftimeout',['retry_timeout',['../structtiny__fd__init__t__.html#a54b9c689fba5aae8ccc0c29f05a159ca',1,'tiny_fd_init_t_']]],
+  ['run',['run',['../classTiny_1_1ProtoHd.html#af07b1f5d0df3021e00a4b4f04af4150b',1,'Tiny::ProtoHd']]],
+  ['run_5frx',['run_rx',['../classTiny_1_1IProtoFd.html#a37292eb5c9faf1be8c4850985e0ae2eb',1,'Tiny::IProtoFd']]],
+  ['run_5ftx',['run_tx',['../classTiny_1_1IProtoFd.html#a19be0bd5124009c7de051554841070b3',1,'Tiny::IProtoFd']]],
+  ['rx_5fbuf',['rx_buf',['../struct__hdlc__handle__t.html#a4736ab7a858df79cf74bd19e6dbacb13',1,'_hdlc_handle_t']]],
+  ['rx_5fbuf_5fsize',['rx_buf_size',['../struct__hdlc__handle__t.html#a40baccf093b26c08d9108c8238f95675',1,'_hdlc_handle_t']]]
 ];
